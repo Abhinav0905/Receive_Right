@@ -1,0 +1,163 @@
+You are working in my existing ReceiveRight repository in VS Code. Complete the remaining work for a strong, truthful Amazon Developer Hackathon submission. Implement and verify the changes; do not stop at a plan. Preserve my local work, credentials and receiving records. Read this entire brief first.
+
+GOAL AND SCOPE
+
+ReceiveRight helps a small business turn a spoken delivery count into a reviewed receipt, with shortages, damage, later deliveries and supplier discrepancy drafts. Primary track: Alexa+. Additional entry: AWS Builder through the working Amazon Bedrock integration.
+
+Use the permitted independent Alexa+ experience simulator and self-hosted MCP server path. We do not have Alexa hardware or access to Amazon's partner-only Alexa+ developer tools. Do not pursue the Alexa CLI, official simulator, OAuth deployment, MCP Apps, Ring, Amazon shopping history or packing-slip vision in this pass. These are outside this delivery.
+
+Official sources checked October 17, 2026:
+- https://amazonappdev2026.devpost.com/rules
+- https://amazonappdev2026.devpost.com/details/faqs
+- https://amazonappdev2026.devpost.com/
+The deadline is October 23, 2026 at noon PDT. The rules allow a simulated experience without a specific SDK. The FAQ accepts an actual MCP web client and says a locally runnable public repository plus a demo video is sufficient; public hosting is not mandatory. Verify current requirements before finalizing submission documents. Do not claim that an installed Alexa add-on is required.
+
+1. INSPECT THE CURRENT PROJECT BEFORE EDITING
+
+Read AGENTS.md files that apply, README, package.json, architecture, authentication, receiving domain, storage, MCP route, Bedrock agent, voice components and existing tests. Inspect git status/diff and preserve my changes. This checkout is authoritative; the filenames below are landmarks, not instructions to overwrite newer implementations:
+- app/mcp/route.ts
+- app/api/assistant/route.ts
+- app/api/receiving/route.ts
+- app/receiving-assistant.tsx
+- app/receiving-workspace.tsx
+- app/chatgpt-auth.ts
+- lib/receiving-agent.ts, lib/receiving.ts, lib/store.ts
+- lib/dictation.ts
+- docs/bedrock-setup.md, docs/friction-log.md
+
+The exported version's Bedrock agent calls shared receiving operations directly, rather than making MCP HTTP requests. Check whether my local version has changed. Preserve the existing staged-turn rollback and concurrency checks. Do not rewrite the framework or reroute the whole agent merely to demonstrate MCP.
+
+Proceed through the tasks below without pausing for routine choices. If something is blocked, finish independent work and report the exact blocker. Do not create a public deployment, publish a repository, push commits, submit to Devpost or send messages.
+
+2. PROVE THE MCP SERVER WITH A REAL CLIENT
+
+Add a small MCP verification panel to Demo & integration and a reusable transport client. Send actual HTTP requests to this project's MCP endpoint; calling a domain function, dispatcher or fixture directly is not an HTTP MCP round trip.
+
+Implement the real lifecycle: initialize, notifications/initialized, tools/list, then tools/call. Request protocol 2025-11-25, handle the negotiated version, JSON-RPC IDs, HTTP/MCP headers and the response forms required by the chosen transport. Check the primary MCP specification for protocol details. The UI must display the actual negotiated version, discovered tool count, tool names, success/errors and request durations. Keep technical protocol details in the integration panel.
+
+At minimum, make tools/call read the current workspace and demonstrate that it matches the receiving UI. Also provide an explicitly clicked draft/preview action using actual tools/call requests against a dedicated demo order. Preview is allowed to change draft state; do not label it read-only. Never auto-confirm a receipt as a connection test.
+
+Show a compact sanitized request/response trace, including which requests actually used HTTP. Redact authorization, cookies, identity headers, confirmation tokens and personal data. Connection status must come from successful requests, not a hardcoded boolean.
+
+Authentication is part of correctness. Local website authentication and the hosted MCP gateway may use different flows. Make the local judge/demo path work first. Preserve owner isolation, origin validation and existing gateway authentication. Do not inject a universal user identity, accept caller-supplied owner headers, expose a private MCP token to browser code or create an arbitrary URL proxy. If a fixed server-side bridge is needed, preserve the authenticated owner's authorization and document the actual network hop. A bridge that calls a domain function directly must not be described as MCP transport.
+
+Keep loopback-only development sign-in restricted to local development. Do not expose the current trusted-header Worker directly on a public host. If a hosting gateway prevents the same mechanism there, document that limitation without weakening authentication.
+
+Do not claim the Bedrock conversation travels through MCP if it still uses shared domain operations. Describe the two paths accurately. Provide a repeatable protocol smoke check with documented prerequisites.
+
+3. FINISH AND TEST THE MICROPHONE FLOW
+
+A previous issue cut off dictation after "including one damaged" before the rest of the sentence. A patch may already be installed: continuous recognition, interim results and shared transcript assembly. Inspect first; preserve fixes already present.
+
+In both voice entry points:
+- Preserve all recognition segments without duplicating revised interim hypotheses.
+- Preserve captured text on recognition end, error or manual restart.
+- Make listening/stopped state clear. Let the user stop, edit and send deliberately.
+- Handle the final result after stop without submitting stale text.
+- Do not automatically submit a partial utterance or restart recognition indefinitely.
+- Handle unsupported browsers, denied microphone access, no speech and network errors with useful guidance and typed input.
+- Stop recognition on unmount/order changes. Prevent duplicate requests and conflicting recognizers.
+- If speech playback is used, prevent the microphone from recording the app's own speech.
+
+Test this full utterance on the actual browser if microphone access is available:
+"Ten cases of oat milk arrived in total, including one damaged. Prepare the receipt for review."
+Also test a pause before the final sentence, stop/resume and correction before sending. Browser speech services can still end sessions; preserve the text and allow an explicit resume. Do not promise uninterrupted recognition on every browser.
+
+Keep browser dictation, the manual quantity parser and Bedrock reasoning distinguishable in the UI and documentation.
+
+4. PRESERVE RECEIVING CORRECTNESS
+
+Use the existing domain rules and add only missing checks:
+- Received includes damaged. Accepted = received minus damaged.
+- A 12-case order with 10 received including 1 damaged has 9 accepted and 2 undelivered.
+- Two later good cases yield 12 received across deliveries, 11 accepted, 1 historical damaged and 0 undelivered.
+- Physical delivery completion does not mean every ordered unit was accepted in good condition.
+- Each later delivery creates a new receipt; corrections set the current unconfirmed draft counts rather than add again.
+- Counts must be valid and damage cannot exceed received.
+- Confirmed receipts remain immutable.
+- Final confirmation requires explicit human action on the exact reviewed draft. Edits invalidate old review tokens; repeated confirmation of the same token must not create duplicate receipts.
+- Keep confirmation unavailable to the model. Keep tokens out of model context and debug traces.
+- Clarify ambiguous quantities, unclear damage inclusion, unspecified condition, item matching and unit conversions before changing counts.
+- "The rest arrived" needs an actual physical count and condition.
+- Informational questions must not mutate drafts.
+- Preserve transaction rollback on failed agent turns and rejection of stale concurrent changes.
+
+Supplier reports remain drafts based on confirmed records. Do not send them or claim to change inventory or issue refunds. Photos remain evidence unless an actual extraction feature exists.
+
+5. MAKE THE DEMO REPEATABLE WITHOUT DESTROYING DATA
+
+Create a fresh fictional demo order for 12 cases of oat milk with a unique DEMO reference. Provide a simple way to create another fresh demo run and focus receipt history on that run/order. Mark demo data clearly. Prefer adding a fresh order over clearing records.
+
+Never delete, reset or rewrite existing purchase orders, confirmed receipts, evidence or business data. Do not wipe the database. Keep any fixture/automated test workspace isolated from my normal records.
+
+Support this recording sequence:
+1) Select the fresh order.
+2) Speak the full delivery instruction.
+3) Show the resulting draft and explain 9 accepted, 1 damaged, 2 outstanding.
+4) Open the exact review and explicitly confirm.
+5) Receive two additional good cases as a separate delivery and confirm.
+6) Show two receipts, zero undelivered and the historical damaged case.
+7) Open a supplier discrepancy draft without sending it.
+8) Show a brief real MCP trace from the integration panel.
+
+Rehearse an ambiguous instruction and a pre-confirmation correction separately. Keep the final video story short rather than squeezing every edge case into it.
+
+6. FIX STATUS, FAILURE STATES AND FINISHING DETAILS
+
+Replace stale Bedrock setup copy with shared, truthful status across the app:
+- Setup needed when required configuration is missing.
+- Configured when values exist.
+- A timestamped last connection-test result only after an actual request. A previous success does not establish current credential validity.
+- Clear expired/invalid credentials, model access, throttling and timeout errors.
+
+Use the existing server-side environment configuration. Never print or commit the Bedrock API key, copy secrets into browser variables, screenshots, documentation or logs, or replace my .env. Keep real environment files and runtime data ignored; keep .env.example limited to placeholders and safe examples.
+
+Test a real configured Bedrock read and draft preparation if usable credentials exist. Avoid automatic retries that could replay mutations. Distinguish fixture tests from live inference. The UI must never display a fake AI success when the provider failed.
+
+Keep the existing visual design. Fix obvious readability, keyboard/focus, mobile layout, loading and error-state problems. Provide one clear primary action per stage. Avoid a redesign and avoid speculative new features.
+
+7. RUN MEANINGFUL VERIFICATION
+
+Use the repository's supported commands. In the exported version these include pnpm typecheck, pnpm test, pnpm build and pnpm test:worker; verify current scripts and run the relevant checks. Include dictation tests in the regular test command if they are currently omitted. Run lint if configured; distinguish pre-existing failures from new failures without weakening rules.
+
+Reuse existing tests. Add targeted tests where coverage is missing for:
+- Real MCP transport lifecycle, actual tool execution, invalid requests and unauthenticated access.
+- Owner isolation and origin protection.
+- Damage/shortage math, later deliveries, stale reviews and confirmation retries.
+- Model attempts to confirm, rollback after model failure and concurrent edits.
+- Multi-segment dictation and repeated interim recognition results.
+
+Verify protocol behavior with the built runtime, not only an in-memory handler. Stubbed Bedrock tests do not establish live AWS access. Run a live check separately when credentials allow it and keep test-created records in a demo workspace/order.
+
+Perform browser checks if available. If the agent cannot access the physical microphone, say "manual microphone verification required" and supply exact steps. Never mark an unperformed check as passed. Do not invent latency figures or claim a localhost timing proves public deployment performance.
+
+8. PREPARE SUBMISSION FILES IN THE REPOSITORY
+
+Update existing documents rather than create conflicting duplicates. Prepare:
+- README: exact prerequisites/install/start commands, migrations, environment names, authenticated local access, MCP smoke check and the demo walkthrough. Document server-only credentials and honest limits.
+- Architecture: browser dictation -> Bedrock reasoning -> validated/staged domain operations -> review -> human confirmation -> receipt storage. Show the real MCP transport path separately if it remains separate.
+- GitHub submission readiness: full source/assets/run instructions and an appropriate open-source license for code we own if one is missing. Preserve existing licenses and third-party notices. Report unresolved ownership issues rather than invent permission.
+- docs/SUBMISSION_DRAFT.md: actual problem, audience, implemented features, Alexa+ simulation route, documented Bedrock integration for AWS Builder, limits and work completed during the hackathon window. Do not invent customer interviews, adoption, savings, production deployment or an Alexa connection.
+- docs/DEMO_SCRIPT.md: an English screen-recording script targeting 2:30-2:45, under 3 minutes. Lead with the receiving problem and working interaction, include brief MCP/AWS proof and state the simulator status honestly. Include a shot list and rehearsal steps. Avoid unlicensed media.
+- Product feedback for tools/APIs actually used, including onboarding, what worked, issues, proposed improvements and whether we would use them again.
+- Extend the existing friction log with observed problems only, dates, reproduction steps, expected/actual behavior, severity, workaround and actionable suggestion. The microphone cutoff and expired credentials were reported by the user; attribute un-reproduced observations accordingly. Do not portray our own app bugs as Alexa SDK defects.
+- A final submission checklist covering the current official requirements, source access/license, public English video, required feedback, AWS Builder fields and judge run instructions. Hosting is optional. Test credentials apply if we provide a private hosted site for judges. Do not publish credentials or claim the submission is already sent.
+
+Mark information only I can supply, such as the final GitHub/video URLs, as TODOs. Do not claim complete submission readiness with unresolved required items.
+
+9. LEAVE A REVIEWABLE HANDOFF
+
+Create docs/REVIEW_HANDOFF.md with:
+- What changed, file paths and why.
+- Exact verification commands and observed results, distinguishing fixture, built-runtime, live Bedrock, browser and physical microphone checks.
+- Actual MCP request sequence, negotiated version and sanitized evidence.
+- Local URL, demo order reference and exact UI clicks for review.
+- Demo arithmetic before and after both deliveries.
+- Authentication/hosting limits, any required manual checks and remaining submission TODOs.
+- Any failed checks and whether they were already failing before your edits.
+
+Leave the app runnable for browser review. Do not kill unrelated processes. If an existing dev server needs restarting, handle only this project's server carefully.
+
+Finish with a concise report: completed work, checks run, local URL, fresh demo order, blockers and the remaining actions I must take. Do not promise a prize. The goal is a dependable product and an accurate submission that can stand up to inspection.
+
+Start by inspecting the current checkout, then implement the work in this order. Keep going through verification and the handoff.
