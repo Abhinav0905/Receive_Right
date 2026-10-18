@@ -101,7 +101,7 @@ Rules, Submission Requirements; Overview, "What to Submit"; FAQs:
 - [ ] **Decision needed:** whether to keep the hosted-site URL in README "Website and deployment". The site requires the owner's sign-in and is not a judge demo.
 - Choose **one** access option:
   - [ ] **Option A, public repository with an open-source license.** — Partly done in repo
-    - `LICENSE` (MIT) is present with the placeholder copyright holder "ReceiveRight contributors". **TODO (owner):** confirm or replace the holder name and confirm MIT is the license you want.
+    - `LICENSE` (MIT, copyright 2026 Kumar Abhinav) is present and GitHub detects it as MIT. — Done
     - Rules: the license "should be detectable and visible at the top of the repository page (in the About section)". **TODO (owner):** after pushing, check that GitHub shows the license in the About sidebar.
     - Existing third-party notices are kept in `build/sites-vite-plugin.LICENSE` (MIT, OpenAI) and `vendor/shadcn-tailwind-4.13.0.LICENSE.md` (MIT, shadcn). — Done in repo
   - [ ] **Option B, private repository shared with the reviewers.** — Only if you don't use option A
@@ -245,7 +245,7 @@ None of the following has been done: pushing a GitHub repository, uploading the 
 2. Decide on hosting. Ask the organizers about the FAQ versus forum conflict, or rely on the FAQ and the simulated path. If you host privately, prepare judge credentials for the testing instructions only.
 3. Confirm sole ownership, the employer IP position, eligibility, no Sponsor support, and the terms of the development tools used.
 4. Confirm that no version of ReceiveRight existed before August 31, 2026.
-5. Confirm the license holder name in `LICENSE` and choose a public or private repository.
+5. License holder set (Kumar Abhinav); the repository is public.
 6. Decide whether to commit `IDE_HANDOFF.md`, `ReceiveRight_VSCode_Agent_Prompt.txt` and `.openai/hosting.json`, and whether README keeps the hosted URL.
 7. Create the GitHub repository and push, after checking that `.env` is ignored and absent from the staged files. Check that the license shows in the About section. For a private repository, add the reviewers close to submission.
 8. Generate a fresh Bedrock key, restart `pnpm dev` and run the checks in section 12.

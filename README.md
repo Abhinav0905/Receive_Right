@@ -162,7 +162,7 @@ git push -u origin main
 
 Never force-add environment files. If a secret is ever committed, revoke it; deleting it later does not remove it from history.
 
-**License:** project code is under the [MIT License](LICENSE) (confirm the copyright holder line before publishing). Third-party notices are retained in `build/sites-vite-plugin.LICENSE` and `vendor/`.
+**License:** project code is under the [MIT License](LICENSE), copyright 2026 Kumar Abhinav. Third-party notices are retained in `build/sites-vite-plugin.LICENSE` and `vendor/`.
 
 ## Website and deployment
 

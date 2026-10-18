@@ -218,7 +218,8 @@ Checks: `pnpm typecheck`, `pnpm lint`, `pnpm test`, `pnpm build`, `pnpm test:wor
 Full instructions: [README.md](../README.md). Bedrock setup: [docs/bedrock-setup.md](bedrock-setup.md).
 
 - TODO (owner): GitHub repository URL. It must be public with an open-source license file shown in the About section, or private and shared with the listed Amazon reviewers.
-- TODO (owner): confirm the LICENSE file and copyright holder name, and confirm that the submission is solely owned by you or your team (check any employer IP agreement).
+- License: MIT, copyright 2026 Kumar Abhinav (`LICENSE`).
+- TODO (owner): confirm that the submission is solely owned by you or your team (check any employer IP agreement).
 - TODO (owner): demo video URL (public on YouTube or Vimeo, English, under 3 minutes, with no third-party trademarks or unlicensed music).
 - TODO (owner): decide whether to offer a hosted site to judges. If it is private, put judge credentials in the Devpost testing instructions, never in the repository. The FAQ says a runnable repository plus video is enough, but an organizer forum reply said an Alexa+ MCP server should stay live through judging. Ask the organizers, or rely on the simulated-experience path.
 
