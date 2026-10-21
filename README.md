@@ -144,21 +144,7 @@ Fixture tests do not prove live AWS access or model quality; only `check:bedrock
 | `tests/` | Unit and compiled-Worker tests |
 | `docs/` | Setup, demo script, submission drafts, feedback, friction log, review handoff |
 
-## Put the source on GitHub
-
-There is no Git history in this export. Create an empty repository, then from this folder:
-
-```sh
-git init
-git add .
-git status --short
-git check-ignore .env            # must print .env
-git diff --cached --name-only    # .env, .wrangler/, .live-check/ must not appear
-git commit -m "ReceiveRight hackathon prototype"
-git branch -M main
-git remote add origin https://github.com/YOUR-USERNAME/receiveright.git
-git push -u origin main
-```
+## License and secrets
 
 Never force-add environment files. If a secret is ever committed, revoke it; deleting it later does not remove it from history.
 
